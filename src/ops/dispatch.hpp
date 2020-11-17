@@ -3,16 +3,16 @@
 
 #include "queue.hpp"
 
-#include "sum.hpp"
+#include "kernels.hpp"
 
-template <class... Accessors>
+template <class Kernel, class... Accessors>
 auto make_callable(Accessors... accessors)
 {
-  return [=](nd_item<1> item) { return sten::sum(item, accessors...); };
+  return [=](nd_item<1> item) { return Kernel::op(item, accessors...); };
 }
 
 template <class Kernel, class Tensor0, class Tensor1, class Tensor2>
-auto dispatch(Tensor0 &t0, Tensor1 &t1, Tensor2 &t2)
+void dispatch(Tensor0 &t0, Tensor1 &t1, Tensor2 &t2)
 {
   using namespace cl::sycl;
   auto &queue = queue_for(t1.get_device());
@@ -28,8 +28,8 @@ auto dispatch(Tensor0 &t0, Tensor1 &t1, Tensor2 &t2)
 
     auto myRange = nd_range<1>(range<1>(nElems), range<1>(nElems / 4));
 
-    cgh.parallel_for<sten::SumKernel>(
-        myRange, make_callable(t0access, t1access, t2access));
+    cgh.parallel_for<Kernel>(
+        myRange, make_callable<Kernel>(t0access, t1access, t2access));
   });
 }
 

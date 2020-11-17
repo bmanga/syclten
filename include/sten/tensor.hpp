@@ -30,6 +30,7 @@ class tensor {
   float get_at(size_t idx);
 
   friend tensor operator+(tensor &a, tensor &b);
+  friend tensor operator>(tensor &a, tensor &b);
 
  private:
   tensor(const detail::sten_tensor &);
