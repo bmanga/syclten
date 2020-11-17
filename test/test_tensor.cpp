@@ -44,25 +44,38 @@ TEST_CASE("Tensor math operations")
 
 TEST_CASE("Tensor logical operations")
 {
+  float data1[] = {1, 2, 3, 4};
+  float data2[] = {1, 3, 2, 4};
+  auto t1cpu = tensor(data1, {4}, kCPU);
+  auto t2cpu = tensor(data2, {4}, kCPU);
+  auto t1gpu = tensor(data1, {4}, kGPU);
+  auto t2gpu = tensor(data2, {4}, kGPU);
   SUBCASE("gt")
   {
-    float data1[] = {1, 2, 3, 4};
-    float data2[] = {1, 3, 2, 4};
-    auto t1cpu = tensor(data1, {4}, kCPU);
-    auto t2cpu = tensor(data2, {4}, kCPU);
     auto gt1cpu = t1cpu > t2cpu;
-
     CHECK(!gt1cpu.get_at(0));
     CHECK(!gt1cpu.get_at(1));
     CHECK(gt1cpu.get_at(2));
     CHECK(!gt1cpu.get_at(3));
 
-    auto t1gpu = tensor(data1, {4}, kGPU);
-    auto t2gpu = tensor(data2, {4}, kGPU);
     auto gt2gpu = t2gpu > t1gpu;
     CHECK(!gt2gpu.get_at(0));
     CHECK(gt2gpu.get_at(1));
     CHECK(!gt2gpu.get_at(2));
+    CHECK(!gt2gpu.get_at(3));
+  }
+  SUBCASE("lt")
+  {
+    auto gt1cpu = t1cpu < t2cpu;
+    CHECK(!gt1cpu.get_at(0));
+    CHECK(gt1cpu.get_at(1));
+    CHECK(!gt1cpu.get_at(2));
+    CHECK(!gt1cpu.get_at(3));
+
+    auto gt2gpu = t2gpu < t1gpu;
+    CHECK(!gt2gpu.get_at(0));
+    CHECK(!gt2gpu.get_at(1));
+    CHECK(gt2gpu.get_at(2));
     CHECK(!gt2gpu.get_at(3));
   }
 }

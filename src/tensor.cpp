@@ -42,6 +42,13 @@ class sten_tensor {
     return result;
   }
 
+  sten_tensor lt(sten_tensor &b)
+  {
+    sten_tensor result(get_buffer().get_count(), b.get_device());
+    dispatch<sten::GtKernel>(result, b, *this);
+    return result;
+  }
+
   float get_at(size_t idx)
   {
     float result = get_single(*this, idx);
@@ -102,6 +109,10 @@ tensor operator+(tensor &a, tensor &b)
 tensor operator>(tensor &a, tensor &b)
 {
   return a.get_impl().gt(b.get_impl());
+}
+tensor operator<(tensor &a, tensor &b)
+{
+  return a.get_impl().lt(b.get_impl());
 }
 
 float tensor::get_at(size_t idx)
