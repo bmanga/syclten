@@ -10,21 +10,26 @@ class sten_tensor;
 class tensor {
  public:
   template <unsigned Dimensions>
-  tensor(const size<Dimensions> &dimensions, device_kind device)
-      : tensor(get_count(dimensions), device)
+  tensor(const size<Dimensions> &dimensions, device_kind default_device)
+      : tensor(get_count(dimensions), default_device)
   {
   }
   template <unsigned Dimensions>
-  tensor(float *data, const size<Dimensions> &dimensions, device_kind device)
-      : tensor(data, get_count(dimensions), device)
+  tensor(float *data,
+         const size<Dimensions> &dimensions,
+         device_kind default_device)
+      : tensor(data, get_count(dimensions), default_device)
   {
   }
-  explicit tensor(size_t num_elems, device_kind device);
-  explicit tensor(float *data, size_t num_elems, device_kind device);
+  explicit tensor(size_t num_elems, device_kind default_device);
+  explicit tensor(float *data, size_t num_elems, device_kind default_device);
   ~tensor();
 
-  bool is_gpu() const;
-  bool is_cpu() const;
+  bool is_default_gpu() const;
+  bool is_default_cpu() const;
+
+  bool is_available_on_cpu() const;
+  bool is_available_on_gpu() const;
 
   size_t num_elems() const;
   float get_at(size_t idx);

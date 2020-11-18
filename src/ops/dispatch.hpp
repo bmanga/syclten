@@ -5,6 +5,8 @@
 
 #include "kernels.hpp"
 
+namespace sten {
+
 template <class Kernel, class... Accessors>
 auto make_callable(Accessors... accessors)
 {
@@ -12,10 +14,13 @@ auto make_callable(Accessors... accessors)
 }
 
 template <class Kernel, class Tensor0, class Tensor1, class Tensor2>
-void dispatch(Tensor0 &t0, Tensor1 &t1, Tensor2 &t2)
+void dispatch(device device, Tensor0 &t0, Tensor1 &t1, Tensor2 &t2)
 {
   using namespace cl::sycl;
-  auto &queue = queue_for(t1.get_device());
+  auto &queue = queue_for(device);
+  t0.set_available_on(device);
+  t1.set_available_on(device);
+  t2.set_available_on(device);
   queue.submit([&](handler &cgh) {
     auto t0access =
         t0.get_buffer().template get_access<access::mode::write>(cgh);
@@ -40,5 +45,6 @@ auto get_single(Tensor &t0, size_t idx)
   auto accessor = t0.get_buffer().template get_access<access::mode::read>();
   return accessor[idx];
 }
+}  // namespace sten
 
 #endif  // SYCLTEN_DISPATCH_HPP

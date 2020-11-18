@@ -1,2 +1,5 @@
 cmake-build-*
 .idea
+
+# Used for testing purposed, not relevant.
+main.cpp

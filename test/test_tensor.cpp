@@ -5,22 +5,45 @@
 
 using namespace sten;
 
-TEST_CASE("Tensor constructors")
+TEST_CASE("Tensor constructor data")
 {
   auto t1 = tensor({1, 2, 3}, kCPU);
+  auto t2 = tensor(3, kGPU);
+
   float data[] = {1, 2, 3};
-  auto t2 = tensor(data, {1, 3}, kGPU);
-  auto t3 = tensor(3, kCPU);
+  auto t3 = tensor(data, {1, 3}, kCPU);
   auto t4 = tensor(data, 3, kGPU);
 
-  CHECK(t1.is_cpu());
-  CHECK(t1.num_elems() == 1 * 2 * 3);
+  SUBCASE("Device defaults")
+  {
+    CHECK(t1.is_default_cpu());
+    CHECK(t2.is_default_gpu());
+    CHECK(t3.is_default_cpu());
+    CHECK(t4.is_default_gpu());
+  }
 
-  CHECK(t2.is_gpu());
-  CHECK(t2.num_elems() == 3);
+  SUBCASE("Number of elements")
+  {
+    CHECK(t1.num_elems() == 1 * 2 * 3);
+    CHECK(t3.num_elems() == 3);
+  }
 
-  CHECK(t3.is_cpu());
-  CHECK(t4.is_gpu());
+  SUBCASE("Intial data availability")
+  {
+    // No operations performed, it should be lazily allocated.
+    CHECK(!t1.is_available_on_cpu());
+    CHECK(!t1.is_available_on_gpu());
+
+    // No operations performed, it should be lazily allocated.
+    CHECK(!t2.is_available_on_cpu());
+    CHECK(!t2.is_available_on_gpu());
+
+    CHECK(t3.is_available_on_cpu());
+    CHECK(!t3.is_available_on_gpu());
+
+    CHECK(t3.is_available_on_cpu());
+    CHECK(!t3.is_available_on_gpu());
+  }
 }
 
 TEST_CASE("Tensor math operations")
