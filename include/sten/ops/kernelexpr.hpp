@@ -13,48 +13,42 @@ struct sin_op {
     return sin(t);
   }
 };
+
+struct cos_op {
+  template <class T>
+  static auto op(T t)
+  {
+    return sin(t);
+  }
+};
 }  // namespace unary_op
 
+#define BINARY_OPS_XMACRO \
+  XMACRO(plus, +)         \
+  XMACRO(minus, -)        \
+  XMACRO(times, *)        \
+  XMACRO(div, /)          \
+  XMACRO(gt, >)           \
+  XMACRO(lt, <)           \
+  XMACRO(le, <=)          \
+  XMACRO(ge, >=)          \
+  XMACRO(eq, ==)          \
+  XMACRO(neq, !=)
+
 namespace binary_op {
-struct plus_op {
-  template <class T1, class T2>
-  static auto op(T1 a, T2 b)
-  {
-    return a + b;
-  }
-};
 
-struct times_op {
-  template <class T1, class T2>
-  static auto op(T1 a, T2 b)
-  {
-    return a * b;
-  }
-};
+#define XMACRO(name, op_symbol)   \
+  struct name##_op {              \
+    template <class T1, class T2> \
+    static auto op(T1 a, T2 b)    \
+    {                             \
+      return a op_symbol b;       \
+    }                             \
+  };
 
-struct gt_op {
-  template <class T1, class T2>
-  static auto op(T1 a, T2 b)
-  {
-    return a > b;
-  }
-};
+BINARY_OPS_XMACRO
+#undef XMACRO
 
-struct lt_op {
-  template <class T1, class T2>
-  static auto op(T1 a, T2 b)
-  {
-    return a < b;
-  }
-};
-
-struct eq_op {
-  template <class T1, class T2>
-  static auto op(T1 a, T2 b)
-  {
-    return a == b;
-  }
-};
 };  // namespace binary_op
 
 template <auto Value>
