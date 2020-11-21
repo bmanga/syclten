@@ -2,6 +2,7 @@
 #define SYCLTEN_TYPES_HPP
 
 #include <cstddef>
+#include <numeric>
 #include <utility>
 
 namespace sten {
@@ -24,6 +25,22 @@ size_t get_count(const size<N> &sz)
 }
 
 enum device_kind { kCPU, kGPU };
+
+class dimensions {
+ public:
+  dimensions(std::initializer_list<size_t> dims) : m_dims(dims)
+  {
+    m_num_elems =
+        std::accumulate(m_dims.begin(), m_dims.end(), 1, std::multiplies<>{});
+  }
+  dimensions(size_t num_elems) : dimensions({num_elems}) {}
+
+  size_t num_elems() const { return m_num_elems; }
+
+ private:
+  std::vector<size_t> m_dims;
+  size_t m_num_elems;
+};
 
 }  // namespace sten
 

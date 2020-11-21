@@ -2,6 +2,7 @@
 #define SYCLTEN_KERNELS_HPP
 
 #include <CL/sycl.hpp>
+
 namespace sten {
 
 template <class ValueType>
@@ -23,26 +24,15 @@ using readwrite_accessor =
                        cl::sycl::access::mode::read_write,
                        cl::sycl::access::target::global_buffer>;
 
-struct SumKernel {
-  template <class ValueType>
-  static void op(const nd_item<1> &item,
+template <class KernelExpr>
+struct ExpressionKernel {
+  template <class ValueType, class... ReadAccessors>
+  static void op(const cl::sycl::nd_item<1> &item,
                  write_accessor<ValueType> dest,
-                 read_accessor<ValueType> a,
-                 read_accessor<ValueType> b)
+                 ReadAccessors... read_accessors)
   {
-    ValueType result = a[item.get_global_id()] + b[item.get_global_id()];
-    dest[item.get_global_id()] = result;
-  }
-};
-
-struct GtKernel {
-  template <class ValueType>
-  static void op(const nd_item<1> &item,
-                 write_accessor<ValueType> dest,
-                 read_accessor<ValueType> a,
-                 read_accessor<ValueType> b)
-  {
-    ValueType result = a[item.get_global_id()] > b[item.get_global_id()];
+    ValueType result = KernelExpr::execute(
+        std::make_tuple(read_accessors[item.get_global_id()]...));
     dest[item.get_global_id()] = result;
   }
 };
