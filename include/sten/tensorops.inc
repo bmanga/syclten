@@ -1,5 +1,5 @@
-#ifndef SYCLTEN_TENSOROPS_HPP
-#define SYCLTEN_TENSOROPS_HPP
+#ifndef SYCLTEN_TENSOROPS_INC
+#define SYCLTEN_TENSOROPS_INC
 
 #include "tensorexpr.hpp"
 
@@ -27,4 +27,4 @@ BINARY_OPS_XMACRO
 #undef XMACRO
 
 }  // namespace sten
-#endif  // SYCLTEN_TENSOROPS_HPP
+#endif  // SYCLTEN_TENSOROPS_INC

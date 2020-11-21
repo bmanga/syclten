@@ -1,10 +1,16 @@
 #ifndef SYCLTEN_KERNELEXPR_HPP
 #define SYCLTEN_KERNELEXPR_HPP
 
+#include <cmath>
 #include <tuple>
 #include <utility>
 
 namespace sten {
+namespace nullary_op {
+struct rand_op {
+  static auto op() { return rand(); }
+};
+}  // namespace nullary_op
 namespace unary_op {
 struct sin_op {
   template <class T>
@@ -33,7 +39,9 @@ struct cos_op {
   XMACRO(le, <=)          \
   XMACRO(ge, >=)          \
   XMACRO(eq, ==)          \
-  XMACRO(neq, !=)
+  XMACRO(neq, !=)         \
+  XMACRO(logic_and, &&)   \
+  XMACRO(logic_or, ||)
 
 namespace binary_op {
 

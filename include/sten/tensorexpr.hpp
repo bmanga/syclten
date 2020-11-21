@@ -56,6 +56,12 @@ constexpr auto get_kernel()
 }
 }  // namespace detail
 
+template <class Op>
+struct nullary_expression {
+  auto collect_tensors() { return std::tuple{}; }
+  static constexpr auto get_kernel() { return kernel_expression<Op>{}; }
+};
+
 template <class Op, class Expr>
 struct unary_expression {
   Expr e;
@@ -98,7 +104,8 @@ concept instance_of = requires(T x)
 template <class T>
 concept sten_expr =
     std::is_same_v<T, tensor_expr> || is_constant<T>::value ||
-    instance_of<T, unary_expression> || instance_of<T, binary_expression>;
+    instance_of<T, nullary_expression> || instance_of<T, unary_expression> ||
+    instance_of<T, binary_expression>;
 
 }  // namespace sten
 

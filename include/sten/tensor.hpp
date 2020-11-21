@@ -70,6 +70,6 @@ static_assert(sizeof(tensor) <= 128);
 
 }  // namespace sten
 
-#include "tensorops.hpp"
+#include "tensorops.inc"
 
 #endif  // SYCLTEN_TENSOR_HPP
