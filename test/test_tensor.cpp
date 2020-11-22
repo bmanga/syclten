@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
-#include <sten/tensor.hpp>
+#include <sten/sten.hpp>
 
 using namespace sten;
 

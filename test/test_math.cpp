@@ -1,8 +1,6 @@
 #include <doctest/doctest.h>
 
-#include <sten/tensor.hpp>
-
-#include <sten/math.hpp>
+#include <sten/sten.hpp>
 
 using namespace sten;
 

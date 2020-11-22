@@ -4,7 +4,10 @@
 #include "tensorexpr.hpp"
 
 namespace sten {
-nullary_expression<nullary_op::rand_op> rand() { return {}; }
+inline nullary_expression<nullary_op::rand_op> rand()
+{
+  return {};
 }
+}  // namespace sten
 
 #endif  // SYCLTEN_MATH_HPP
